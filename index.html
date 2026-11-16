@@ -4,6 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#080d16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="GB Visual Lab">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="./icon.svg">
 <title>GB Visual Lab</title>
 <style>
 :root{color-scheme:dark;--bg:#080d16;--panel:rgba(13,22,36,.88);--line:rgba(255,255,255,.13);--text:#f3f7fb;--muted:#a9b8ca;--green:#65e0ad;--red:#ff7777}
@@ -49,7 +55,7 @@ button.primary{background:var(--green);color:#062016;border:0}
   <button id="flip">GIRAR CÁMARA</button>
   <button id="restart" class="primary">CÁMARA</button>
  </div>
- <div class="note">Detección experimental en el dispositivo · No controla el juego ni realiza disparos</div>
+ <div class="note" id="installHint">Para instalar en iPhone: Safari → Compartir → Añadir a pantalla de inicio</div>
 </div>
 <div id="startPanel"><div class="dialog"><h1>GB Visual Lab</h1><p>Vista de cámara completa con detección experimental del jugador <b>alexis</b>, lectura del ángulo y trayectoria superpuesta. Permite el acceso a la cámara para comenzar.</p><button class="primary" id="begin">ACTIVAR CÁMARA</button><p id="err"></p></div></div>
 <canvas id="work" class="hidden"></canvas>
@@ -79,7 +85,7 @@ requestAnimationFrame(scan);}
 $('begin').onclick=start;$('restart').onclick=()=>{if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}lastBox=null;lastAngle=null;lastPower=null;$('angleVal').textContent='—°';$('powerVal').textContent='—%';$('live').textContent='ESPERANDO CÁMARA';$('startPanel').classList.remove('hidden');ctx.clearRect(0,0,innerWidth,innerHeight);};
 $('flip').onclick=()=>{facing=facing==='environment'?'user':'environment';start();};
 $('wind').oninput=()=>{wind=+$('wind').value;$('windOut').textContent=wind;$('windVal').textContent=wind;draw();};
-addEventListener('resize',resize);addEventListener('pagehide',()=>{if(stream)stream.getTracks().forEach(t=>t.stop());if(worker)worker.terminate();});resize();
+addEventListener('resize',resize);addEventListener('pagehide',()=>{if(stream)stream.getTracks().forEach(t=>t.stop());if(worker)worker.terminate();});if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}resize();
 })();
 </script>
 </body></html>
