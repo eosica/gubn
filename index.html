@@ -1,450 +1,85 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#101827">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080d16">
 <title>GB Visual Lab</title>
-
 <style>
-:root {
-  color-scheme: dark;
-  --bg: #101827;
-  --panel: #1b2638;
-  --line: #334155;
-  --text: #edf2f7;
-  --muted: #9fb0c5;
-  --accent: #65d6ad;
-}
-
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font: 15px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-}
-
-main {
-  max-width: 760px;
-  margin: auto;
-  padding: 16px 14px 30px;
-}
-
-h1 { font-size: 23px; margin: 6px 0 4px; }
-
-p {
-  color: var(--muted);
-  line-height: 1.45;
-  margin: 6px 0 12px;
-}
-
-.panel {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  padding: 13px;
-  margin: 12px 0;
-}
-
-.stage {
-  position: relative;
-  overflow: hidden;
-  background: #05080d;
-  border-radius: 12px;
-  aspect-ratio: 4/3;
-  margin-top: 10px;
-}
-
-video, canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-canvas { touch-action: manipulation; }
-
-button {
-  border: 0;
-  border-radius: 11px;
-  padding: 12px 14px;
-  background: #2c3b52;
-  color: white;
-  font-weight: 650;
-}
-
-button.primary {
-  background: var(--accent);
-  color: #082019;
-}
-
-button:disabled { opacity: .45; }
-
-.row {
-  display: flex;
-  gap: 9px;
-  flex-wrap: wrap;
-  margin-top: 10px;
-}
-
-.hint {
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1.4;
-}
-
-label {
-  display: block;
-  color: var(--muted);
-  font-size: 13px;
-  margin: 13px 0 5px;
-}
-
-input[type=range] {
-  width: 100%;
-  accent-color: var(--accent);
-}
-
-.value { float: right; color: var(--text); }
-
-.status {
-  font-size: 13px;
-  color: #f5c76a;
-  min-height: 18px;
-  margin-top: 8px;
-}
-
-.stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-}
-
-.stat {
-  background: #111c2b;
-  border-radius: 10px;
-  padding: 10px;
-}
-
-.stat b { display: block; font-size: 17px; }
-.stat span { color: var(--muted); font-size: 11px; }
+:root{color-scheme:dark;--bg:#080d16;--panel:rgba(13,22,36,.88);--line:rgba(255,255,255,.13);--text:#f3f7fb;--muted:#a9b8ca;--green:#65e0ad;--red:#ff7777}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font:15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+#camera{position:fixed;inset:0;width:100%;height:100%;object-fit:contain;background:#03060a}
+#overlay{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+.shade{position:fixed;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.65),transparent 22%,transparent 68%,rgba(0,0,0,.62))}
+.top{position:fixed;top:env(safe-area-inset-top,10px);left:0;right:0;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.brand{font-weight:850;letter-spacing:.08em;font-size:14px;text-shadow:0 1px 8px #000}.pill{border:1px solid var(--line);background:var(--panel);backdrop-filter:blur(12px);border-radius:99px;padding:8px 11px;font-size:11px;color:var(--green);font-weight:700}
+.bottom{position:fixed;left:12px;right:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);display:grid;gap:8px}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.metric{background:var(--panel);border:1px solid var(--line);backdrop-filter:blur(12px);border-radius:14px;padding:10px 11px;min-width:0}
+.metric span{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.07em}
+.metric b{display:block;font-size:21px;margin-top:2px;font-variant-numeric:tabular-nums}
+.status{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:9px 11px;font-size:12px;color:#e6edf5;backdrop-filter:blur(12px)}
+.controls{display:flex;gap:8px;align-items:center}
+button{border:1px solid var(--line);border-radius:12px;padding:11px 13px;background:var(--panel);color:white;font-weight:700;font-size:12px;backdrop-filter:blur(12px)}
+button.primary{background:var(--green);color:#062016;border:0}
+.tune{display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px 10px;flex:1;min-width:0}
+.tune label{font-size:10px;color:var(--muted);white-space:nowrap}.tune input{width:100%;min-width:35px;accent-color:var(--green)}.tune output{font-size:11px;min-width:27px;text-align:right}
+#startPanel{position:fixed;inset:0;display:grid;place-items:center;padding:24px;background:rgba(4,8,14,.88);z-index:5}
+.dialog{max-width:390px;width:100%;padding:22px;border:1px solid var(--line);border-radius:22px;background:#121d2d;text-align:center}
+.dialog h1{font-size:23px;margin:0 0 8px}.dialog p{color:var(--muted);font-size:13px;line-height:1.5}
+#startPanel button{width:100%;margin-top:8px}
+.hidden{display:none!important}
+.note{font-size:10px;color:#9aabc0;text-align:center}
+@media(min-aspect-ratio:1/1){.bottom{max-width:540px;left:50%;right:auto;width:calc(100% - 24px);transform:translateX(-50%)}}
 </style>
 </head>
-
 <body>
-<main>
-
-<h1>GB Visual Lab</h1>
-<p>Laboratorio visual experimental para GunBound clásico · cámara, puntos de referencia y trayectoria orientativa.</p>
-
-<section class="panel">
-<b>1. Vista de cámara</b>
-
-<div class="stage">
-<video id="video" autoplay playsinline muted></video>
-<canvas id="canvas"></canvas>
+<video id="camera" autoplay playsinline muted></video>
+<canvas id="overlay"></canvas><div class="shade"></div>
+<div class="top"><div class="brand">GB VISUAL LAB</div><div class="pill" id="live">ESPERANDO CÁMARA</div></div>
+<div class="bottom">
+ <div class="metrics">
+  <div class="metric"><span>Ángulo detectado</span><b id="angleVal">—°</b></div>
+  <div class="metric"><span>Potencia</span><b id="powerVal">—%</b></div>
+  <div class="metric"><span>Viento</span><b id="windVal">—</b></div>
+ </div>
+ <div class="status" id="status">Apunta la cámara a la pantalla. Buscando el jugador alexis…</div>
+ <div class="controls">
+  <div class="tune"><label for="wind">VIENTO</label><input id="wind" type="range" min="-10" max="10" value="0"><output id="windOut">0</output></div>
+  <button id="flip">GIRAR CÁMARA</button>
+  <button id="restart" class="primary">CÁMARA</button>
+ </div>
+ <div class="note">Detección experimental en el dispositivo · No controla el juego ni realiza disparos</div>
 </div>
-
-<div class="row">
-<button class="primary" id="start">Activar cámara</button>
-<button id="flip" disabled>Cambiar cámara</button>
-<button id="reset">Reiniciar puntos</button>
-</div>
-
-<div class="status" id="status">
-Activa la cámara y toca la imagen: primero tu móvil y después el objetivo.
-</div>
-
-<p class="hint">
-La cámara requiere permiso de Safari. La imagen se procesa localmente y no se envía a un servidor.
-</p>
-</section>
-
-<section class="panel">
-<b>2. Referencias</b>
-
-<p>
-Primer toque: posición de tu móvil.
-Segundo toque: centro del enemigo.
-Toca de nuevo para mover el punto más cercano.
-</p>
-
-<div class="stats">
-<div class="stat">
-<b id="origin">—</b>
-<span>Tu móvil (%)</span>
-</div>
-
-<div class="stat">
-<b id="target">—</b>
-<span>Objetivo (%)</span>
-</div>
-
-<div class="stat">
-<b id="distance">—</b>
-<span>Distancia visual</span>
-</div>
-</div>
-</section>
-
-<section class="panel">
-<b>3. Parámetros</b>
-
-<label>Ángulo <span class="value" id="av">45°</span></label>
-<input id="angle" type="range" min="5" max="85" value="45">
-
-<label>Potencia <span class="value" id="pv">70%</span></label>
-<input id="power" type="range" min="10" max="100" value="70">
-
-<label>Viento horizontal <span class="value" id="wv">0</span></label>
-<input id="wind" type="range" min="-10" max="10" value="0">
-
-<p class="hint">
-Modelo visual experimental: no representa todavía la física exacta de cada móvil o mapa.
-</p>
-</section>
-
-<section class="panel">
-<b>4. Simulación</b>
-
-<p id="result">
-Marca tu móvil y el objetivo para dibujar una trayectoria orientativa.
-</p>
-
-<div class="row">
-<button class="primary" id="solve">Estimar ángulo</button>
-<button id="clear">Ocultar trayectoria</button>
-</div>
-
-<p class="hint">
-Esta herramienta no lee memoria, no controla el juego ni ejecuta disparos.
-</p>
-</section>
-
-</main>
-
+<div id="startPanel"><div class="dialog"><h1>GB Visual Lab</h1><p>Vista de cámara completa con detección experimental del jugador <b>alexis</b>, lectura del ángulo y trayectoria superpuesta. Permite el acceso a la cámara para comenzar.</p><button class="primary" id="begin">ACTIVAR CÁMARA</button><p id="err"></p></div></div>
+<canvas id="work" class="hidden"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script>
-(() => {
-const $ = id => document.getElementById(id);
-const video = $('video');
-const canvas = $('canvas');
-const ctx = canvas.getContext('2d');
-
-let stream = null;
-let facing = 'environment';
-let origin = null;
-let target = null;
-let show = true;
-
-function resize() {
-  const r = canvas.getBoundingClientRect();
-  const d = Math.min(devicePixelRatio || 1, 2);
-
-  canvas.width = r.width * d;
-  canvas.height = r.height * d;
-
-  ctx.setTransform(d, 0, 0, d, 0, 0);
-  draw();
-}
-
-function point(p, color, label, w, h) {
-  if (!p) return;
-
-  ctx.beginPath();
-  ctx.arc(p.x * w, p.y * h, 8, 0, 7);
-  ctx.fillStyle = color;
-  ctx.fill();
-
-  ctx.lineWidth = 2;
-  ctx.strokeStyle = '#07111c';
-  ctx.stroke();
-
-  ctx.font = 'bold 12px sans-serif';
-  ctx.fillStyle = color;
-  ctx.fillText(label, p.x * w + 11, p.y * h - 10);
-}
-
-function draw() {
-  const r = canvas.getBoundingClientRect();
-  const w = r.width;
-  const h = r.height;
-
-  ctx.clearRect(0, 0, w, h);
-
-  point(origin, '#65d6ad', 'M', w, h);
-  point(target, '#ff7777', 'OBJ', w, h);
-
-  if (origin && target && show) {
-    const dx = target.x - origin.x;
-    const angle = Number($('angle').value) * Math.PI / 180;
-    const power = Number($('power').value) / 100;
-    const wind = Number($('wind').value);
-
-    let xx = origin.x * w;
-    let yy = origin.y * h;
-
-    let vx = Math.cos(angle) * (.35 + power * .7) * (dx < 0 ? -1 : 1);
-    let vy = -Math.sin(angle) * (.35 + power * .7);
-
-    ctx.beginPath();
-    ctx.moveTo(xx, yy);
-
-    for (let i = 0; i < 180; i++) {
-      vx += wind * .00004;
-      vy += .009;
-
-      xx += vx * w * .018;
-      yy += vy * h * .018;
-
-      ctx.lineTo(xx, yy);
-
-      if (xx < 0 || xx > w || yy < 0 || yy > h) break;
-    }
-
-    ctx.strokeStyle = '#65d6ad';
-    ctx.lineWidth = 2.5;
-    ctx.setLineDash([5, 4]);
-    ctx.stroke();
-    ctx.setLineDash([]);
-  }
-}
-
-function updateStats() {
-  $('origin').textContent = origin
-    ? Math.round(origin.x * 100) + ', ' + Math.round(origin.y * 100)
-    : '—';
-
-  $('target').textContent = target
-    ? Math.round(target.x * 100) + ', ' + Math.round(target.y * 100)
-    : '—';
-
-  $('distance').textContent = origin && target
-    ? Math.round(Math.hypot(target.x - origin.x, target.y - origin.y) * 100) + '%'
-    : '—';
-}
-
-canvas.addEventListener('pointerdown', e => {
-  const r = canvas.getBoundingClientRect();
-
-  const p = {
-    x: (e.clientX - r.left) / r.width,
-    y: (e.clientY - r.top) / r.height
-  };
-
-  if (!origin) {
-    origin = p;
-    $('status').textContent = 'Móvil marcado. Ahora toca el objetivo.';
-  } else if (!target) {
-    target = p;
-    $('status').textContent = 'Objetivo marcado. Ajusta los parámetros.';
-  } else {
-    const da = Math.hypot(p.x - origin.x, p.y - origin.y);
-    const db = Math.hypot(p.x - target.x, p.y - target.y);
-
-    if (da < db) origin = p;
-    else target = p;
-  }
-
-  updateStats();
-  draw();
-});
-
-async function camera() {
-  try {
-    if (!navigator.mediaDevices?.getUserMedia) {
-      throw Error('La cámara requiere HTTPS y un navegador compatible');
-    }
-
-    if (stream) stream.getTracks().forEach(t => t.stop());
-
-    stream = await navigator.mediaDevices.getUserMedia({
-      audio: false,
-      video: { facingMode: { ideal: facing } }
-    });
-
-    video.srcObject = stream;
-    await video.play();
-
-    $('flip').disabled = false;
-    $('status').textContent = 'Cámara activa. Marca tu móvil y el objetivo.';
-
-  } catch (e) {
-    $('status').textContent = 'No se pudo abrir la cámara: ' + e.message;
-  }
-}
-
-$('start').onclick = camera;
-
-$('flip').onclick = () => {
-  facing = facing === 'environment' ? 'user' : 'environment';
-  camera();
-};
-
-$('reset').onclick = () => {
-  origin = null;
-  target = null;
-  updateStats();
-  draw();
-
-  $('status').textContent = 'Puntos reiniciados.';
-  $('result').textContent = 'Marca tu móvil y el objetivo para dibujar una trayectoria orientativa.';
-};
-
-$('clear').onclick = () => {
-  show = false;
-  draw();
-};
-
-['angle', 'power', 'wind'].forEach(id => {
-  $(id).oninput = () => {
-    $('av').textContent = $('angle').value + '°';
-    $('pv').textContent = $('power').value + '%';
-    $('wv').textContent = $('wind').value;
-
-    show = true;
-    draw();
-  };
-});
-
-$('solve').onclick = () => {
-  if (!origin || !target) {
-    $('status').textContent = 'Primero marca los dos puntos.';
-    return;
-  }
-
-  const ang = Math.max(8, Math.min(82,
-    Math.round(
-      25 + Math.atan2(
-        Math.max(0, origin.y - target.y),
-        Math.max(.01, Math.abs(target.x - origin.x))
-      ) * 180 / Math.PI * .55
-    )
-  ));
-
-  $('angle').value = ang;
-  $('av').textContent = ang + '°';
-
-  show = true;
-  draw();
-
-  $('result').textContent =
-    'Ángulo inicial orientativo: ' + ang +
-    '°. La potencia debe calibrarse con pruebas reales.';
-};
-
-window.addEventListener('resize', resize);
-
-window.addEventListener('pagehide', () => {
-  if (stream) stream.getTracks().forEach(t => t.stop());
-});
-
-resize();
+(()=> {
+const $=id=>document.getElementById(id),video=$('camera'),overlay=$('overlay'),ctx=overlay.getContext('2d'),work=$('work'),wctx=work.getContext('2d');
+let stream=null,facing='environment',worker=null,busy=false,lastBox=null,lastAngle=null,lastPower=null,wind=0,ocrReady=false,scanAt=0;
+function resize(){overlay.width=innerWidth*devicePixelRatio;overlay.height=innerHeight*devicePixelRatio;ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);draw()}
+function fit(){const vw=video.videoWidth||1,vh=video.videoHeight||1,scale=Math.min(innerWidth/vw,innerHeight/vh),dw=vw*scale,dh=vh*scale;return{x:(innerWidth-dw)/2,y:(innerHeight-dh)/2,w:dw,h:dh}}
+function draw(){ctx.clearRect(0,0,innerWidth,innerHeight);const r=fit();if(lastBox){const x=r.x+lastBox.x*r.w,y=r.y+lastBox.y*r.h,bw=lastBox.w*r.w,bh=lastBox.h*r.h;ctx.strokeStyle='#65e0ad';ctx.lineWidth=3;ctx.shadowColor='#000';ctx.shadowBlur=8;ctx.strokeRect(x,y,bw,bh);ctx.fillStyle='#65e0ad';ctx.font='bold 13px sans-serif';ctx.fillText('ALEXIS · DETECTADO',x,y-8);ctx.shadowBlur=0;
+const tx=x+bw*.55,ty=y-bh*.15;ctx.beginPath();ctx.arc(tx,ty,5,0,Math.PI*2);ctx.fillStyle='#65e0ad';ctx.fill();}
+if(lastBox&&lastAngle!==null){const x=r.x+(lastBox.x+lastBox.w*.5)*r.w,y=r.y+(lastBox.y+lastBox.h*.35)*r.h;const a=lastAngle*Math.PI/180,p=(lastPower??65)/100,dir=1;let vx=Math.cos(a)*(.8+p*1.4)*dir,vy=-Math.sin(a)*(.8+p*1.4),px=x,py=y;ctx.beginPath();ctx.moveTo(px,py);for(let i=0;i<150;i++){vx+=wind*.0009;vy+=.018;px+=vx*2.1;py+=vy*2.1;ctx.lineTo(px,py);if(px<0||px>innerWidth||py<0||py>innerHeight)break;}ctx.strokeStyle='#ffe16a';ctx.lineWidth=3;ctx.setLineDash([7,5]);ctx.stroke();ctx.setLineDash([]);}}
+function setStatus(s){$('status').textContent=s}
+async function start(){try{if(!navigator.mediaDevices?.getUserMedia)throw Error('Abre esta página mediante HTTPS en Safari.');if(stream)stream.getTracks().forEach(t=>t.stop());stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:facing},width:{ideal:1920},height:{ideal:1080}}});video.srcObject=stream;await video.play();$('startPanel').classList.add('hidden');$('live').textContent='CÁMARA ACTIVA';setStatus('Cámara activa. Buscando el rótulo alexis…');if(!worker&&window.Tesseract){worker=await Tesseract.createWorker('eng');await worker.setParameters({tessedit_pageseg_mode:'11'});ocrReady=true;}scan();}catch(e){$('err').textContent='No se pudo iniciar: '+e.message;$('startPanel').classList.remove('hidden');}}
+async function scan(){if(!stream)return;if(!busy&&ocrReady&&video.readyState>=2&&Date.now()-scanAt>1100){busy=true;scanAt=Date.now();try{const max=1000,scale=Math.min(1,max/video.videoWidth);work.width=Math.round(video.videoWidth*scale);work.height=Math.round(video.videoHeight*scale);wctx.drawImage(video,0,0,work.width,work.height);const {data}=await worker.recognize(work);const words=data.words||[];let found=null;for(const word of words){const t=word.text.toLowerCase().replace(/[^a-z]/g,'');if(t.includes('alexis')||t==='alexi5'){const b=word.bbox;found={x:b.x0/work.width,y:b.y0/work.height,w:(b.x1-b.x0)/work.width,h:(b.y1-b.y0)/work.height};break;}}
+if(found){lastBox=found;$('live').textContent='ALEXIS DETECTADO';setStatus('Jugador alexis localizado. Leyendo el HUD…');}
+const texts=words.map(z=>z.text);let angle=null,power=null;
+for(let i=0;i<texts.length;i++){const s=texts[i].replace(',','.');if(/^\d{1,2}(?:\.\d)?°?$/.test(s)){const n=parseFloat(s);if(n>=5&&n<=85){angle=n;break;}}}
+for(let i=0;i<texts.length;i++){const s=texts[i].replace('%','');if(/^\d{1,3}$/.test(s)){const n=+s;if(n>=10&&n<=100){power=n;}}}
+if(angle!==null){lastAngle=angle;$('angleVal').textContent=angle+'°';}if(power!==null){lastPower=power;$('powerVal').textContent=power+'%';}
+if(!found&&!lastBox){$('live').textContent='BUSCANDO ALEXIS';setStatus('No encuentro el nombre alexis. Ajusta la cámara para que se vea toda la pantalla del juego.');}
+if(lastAngle===null){$('angleVal').textContent='—°';}if(lastPower===null){$('powerVal').textContent='—%';}
+draw();
+}catch(e){setStatus('OCR: '+e.message);}finally{busy=false;}}
+requestAnimationFrame(scan);}
+$('begin').onclick=start;$('restart').onclick=()=>{if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}lastBox=null;lastAngle=null;lastPower=null;$('angleVal').textContent='—°';$('powerVal').textContent='—%';$('live').textContent='ESPERANDO CÁMARA';$('startPanel').classList.remove('hidden');ctx.clearRect(0,0,innerWidth,innerHeight);};
+$('flip').onclick=()=>{facing=facing==='environment'?'user':'environment';start();};
+$('wind').oninput=()=>{wind=+$('wind').value;$('windOut').textContent=wind;$('windVal').textContent=wind;draw();};
+addEventListener('resize',resize);addEventListener('pagehide',()=>{if(stream)stream.getTracks().forEach(t=>t.stop());if(worker)worker.terminate();});resize();
 })();
 </script>
-
-</body>
-</html>
+</body></html>
